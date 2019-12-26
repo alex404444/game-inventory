@@ -10,8 +10,8 @@
 
    MAP
      MODULE('MPLAYER_BC.CLW')
-DctInit     PROCEDURE                                      ! Initializes the dictionary definition module
-DctKill     PROCEDURE                                      ! Kills the dictionary definition module
+DctInit     PROCEDURE                                      ! Установка модулей
+DctKill     PROCEDURE                                      ! Удаление словарей
      END
 !--- Application Global and Exported Procedure Definitions --------------------------------------------
      MODULE('MPLAYER001.CLW')
@@ -24,7 +24,7 @@ GLO:Test             BYTE
 GLO:MediaFile        CSTRING(255)
 GLO:FullScreen       BYTE
 GLO:MplayerHandle    LONG
-SilentRunning        BYTE(0)                               ! Set true when application is running in 'silent mode'
+SilentRunning        BYTE(0)                               !  Включения тихого режима
 
 !region File Declaration
 !endregion
@@ -32,17 +32,17 @@ SilentRunning        BYTE(0)                               ! Set true when appli
 EVENT:PlayMedia     Equate(404h)
 EVENT:FullScreen     Equate(404h)
 
-FuzzyMatcher         FuzzyClass                            ! Global fuzzy matcher
+FuzzyMatcher         FuzzyClass                            ! Глобальный fuzzy matcher
 GlobalErrorStatus    ErrorStatusClass,THREAD
-GlobalErrors         ErrorClass                            ! Global error manager
-INIMgr               CLASS(INIClass)                       ! Global non-volatile storage manager
+GlobalErrors         ErrorClass                            ! Глобальный менджер ошибок
+INIMgr               CLASS(INIClass)                       ! Глобальный non-volatile менджер хранилищя
 Fetch                  PROCEDURE(),DERIVED
 Update                 PROCEDURE(),DERIVED
                      END
 
-GlobalRequest        BYTE(0),THREAD                        ! Set when a browse calls a form, to let it know action to perform
-GlobalResponse       BYTE(0),THREAD                        ! Set to the response from the form
-VCRRequest           LONG(0),THREAD                        ! Set to the request from the VCR buttons
+GlobalRequest        BYTE(0),THREAD                      
+GlobalResponse       BYTE(0),THREAD                    
+VCRRequest           LONG(0),THREAD                      
 
 Dictionary           CLASS,THREAD
 Construct              PROCEDURE
@@ -52,16 +52,16 @@ Destruct               PROCEDURE
 
   CODE
   GlobalErrors.Init(GlobalErrorStatus)
-  FuzzyMatcher.Init                                        ! Initilaize the browse 'fuzzy matcher'
-  FuzzyMatcher.SetOption(MatchOption:NoCase, 1)            ! Configure case matching
-  FuzzyMatcher.SetOption(MatchOption:WordOnly, 0)          ! Configure 'word only' matching
-  INIMgr.Init('.\MPlayer.INI', NVD_INI)                    ! Configure INIManager to use INI file
+  FuzzyMatcher.Init                                      
+  FuzzyMatcher.SetOption(MatchOption:NoCase, 1)          
+  FuzzyMatcher.SetOption(MatchOption:WordOnly, 0)       
+  INIMgr.Init('.\MPlayer.INI', NVD_INI)                  
   DctInit
   SYSTEM{PROP:Icon} = 'sv.ico'
   Frame
   INIMgr.Update
-  INIMgr.Kill                                              ! Destroy INI manager
-  FuzzyMatcher.Kill                                        ! Destroy fuzzy matcher
+  INIMgr.Kill                                            
+  FuzzyMatcher.Kill                                      
 
 
 Dictionary.Construct PROCEDURE
@@ -81,8 +81,8 @@ Dictionary.Destruct PROCEDURE
 INIMgr.Fetch PROCEDURE
 
   CODE
-  GLO:uiMode = SELF.TryFetch('Preserved','GLO:uiMode')     ! Resore ' preserved variable' from non-volatile store
-  GLO:Test = SELF.TryFetch('Preserved','GLO:Test')         ! Resore ' preserved variable' from non-volatile store
+  GLO:uiMode = SELF.TryFetch('Preserved','GLO:uiMode')   
+  GLO:Test = SELF.TryFetch('Preserved','GLO:Test')    
   PARENT.Fetch
 
 
@@ -90,6 +90,6 @@ INIMgr.Update PROCEDURE
 
   CODE
   PARENT.Update
-  SELF.Update('Preserved','GLO:uiMode',GLO:uiMode)         ! Save 'preserved variable' in non-volatile store
-  SELF.Update('Preserved','GLO:Test',GLO:Test)             ! Save 'preserved variable' in non-volatile store
+  SELF.Update('Preserved','GLO:uiMode',GLO:uiMode)        
+  SELF.Update('Preserved','GLO:Test',GLO:Test)  
 
