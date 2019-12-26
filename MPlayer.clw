@@ -13,7 +13,6 @@
 DctInit     PROCEDURE                                      ! Установка модулей
 DctKill     PROCEDURE                                      ! Удаление словарей
      END
-!--- Application Global and Exported Procedure Definitions --------------------------------------------
      MODULE('MPLAYER001.CLW')
 Frame                  PROCEDURE   !
      END
