@@ -14,7 +14,7 @@ DctInit     PROCEDURE                                      ! Установка 
 DctKill     PROCEDURE                                      ! Удаление словарей
      END
      MODULE('MPLAYER001.CLW')
-Frame                  PROCEDURE   !
+Frame                  PROCEDURE
      END
    END
 
@@ -28,7 +28,7 @@ SilentRunning        BYTE(0)                               !  Включения
 !region File Declaration
 !endregion
 
-EVENT:PlayMedia     Equate(404h)
+EVENT:PlayMedia     Equate(407h)
 EVENT:FullScreen     Equate(404h)
 
 FuzzyMatcher         FuzzyClass                            ! Глобальный fuzzy matcher
@@ -50,23 +50,23 @@ Destruct               PROCEDURE
 
 
   CODE
-  GlobalErrors.Init(GlobalErrorStatus)
-  FuzzyMatcher.Init                                      
+  FuzzyMatcher.Init    
+  GlobalErrors.Init(GlobalErrorStatus)                                  
   FuzzyMatcher.SetOption(MatchOption:NoCase, 1)          
   FuzzyMatcher.SetOption(MatchOption:WordOnly, 0)       
   INIMgr.Init('.\MPlayer.INI', NVD_INI)                  
   DctInit
-  SYSTEM{PROP:Icon} = 'sv.ico'
+  SYSTEM{PROP:Icon} = '.\sv.ico'
   Frame
   INIMgr.Update
-  INIMgr.Kill                                            
-  FuzzyMatcher.Kill                                      
+  FuzzyMatcher.Kill  
+  INIMgr.Kill                                                                                
 
 
 Dictionary.Construct PROCEDURE
 
   CODE
-  IF THREAD()<>1
+  IF THREAD() <> 1
      DctInit()
   END
 
@@ -75,7 +75,6 @@ Dictionary.Destruct PROCEDURE
 
   CODE
   DctKill()
-
 
 INIMgr.Fetch PROCEDURE
 
@@ -91,4 +90,5 @@ INIMgr.Update PROCEDURE
   PARENT.Update
   SELF.Update('Preserved','GLO:uiMode',GLO:uiMode)        
   SELF.Update('Preserved','GLO:Test',GLO:Test)  
+  SELF.Reload()
 
